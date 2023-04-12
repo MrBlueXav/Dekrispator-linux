@@ -25,8 +25,8 @@ bool freeze = false;
 bool sequencerIsOn = true;
 
 /* ====================================================================================================*/
-/*
- *  This small demo sends a simple sinusoidal wave to your speakers.
+/*	This code is based on alsa-lib/test/pcm.c example
+ *
  */
 
 static char *device = "plughw:0,0"; /* playback device */
@@ -804,8 +804,6 @@ static void help(void) {
 			"-h,--help	help\n"
 			"-D,--device	playback device\n"
 			"-r,--rate	stream rate in Hz\n"
-			"-c,--channels	count of channels in stream\n"
-			"-f,--frequency	sine wave frequency in Hz\n"
 			"-b,--buffer	ring buffer size in us\n"
 			"-p,--period	period size in us\n"
 			"-m,--method	transfer method\n"
@@ -814,16 +812,16 @@ static void help(void) {
 			"-n,--noresample  do not resample\n"
 			"-e,--pevent    enable poll event after each period\n"
 			"\n");
-	printf("Recognized sample formats are:");
+	printf("Recognized sample formats are : \n");
 	for (k = 0; k < SND_PCM_FORMAT_LAST; ++k) {
 		const char *s = snd_pcm_format_name(k);
 		if (s)
-			printf(" %s", s);
+			printf(" %s \n", s);
 	}
 	printf("\n");
-	printf("Recognized transfer methods are:");
+	printf("Recognized transfer methods are :\n");
 	for (k = 0; transfer_methods[k].name; k++)
-		printf(" %s", transfer_methods[k].name);
+		printf(" %s \n", transfer_methods[k].name);
 	printf("\n");
 }
 

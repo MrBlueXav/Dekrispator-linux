@@ -94,7 +94,7 @@ void MagicPatch(uint8_t val) /* random sound parameters */
 {
 	if (val == MIDI_MAXi)
 	{
-		seq_tempo_set(MIDIrandVal());
+		//seq_tempo_set(MIDIrandVal());
 		seq_freqMax_set(MIDIrandVal());
 		seq_scale_set(MIDIrandVal());
 		seq_switchMovingSeq(MIDIrandVal());
