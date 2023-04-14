@@ -123,7 +123,9 @@ extern int8_t currentNote;
 extern int8_t velocity;
 
 /* Exported functions ------------------------------------------------------- */
-
+void midi_open(void);
+snd_seq_event_t *midi_read(void);
+void midi_process(const snd_seq_event_t *ev);
 void MagicFX(uint8_t val);
 void MagicPatch(uint8_t val);
 void Reset_notes_On(void);

@@ -511,7 +511,9 @@ static int async_loop(snd_pcm_t *handle, signed short *samples,
 	/* because all other work is done in the signal handler,
 	 suspend the process */
 	while (1) {
-		sleep(1);
+		midi_process(midi_read());
+		//sleep(1);
+		//printf("Je dors...\n");
 	}
 }
 
@@ -787,16 +789,15 @@ struct transfer_method {
 			snd_pcm_channel_area_t *areas);
 };
 
-static struct transfer_method transfer_methods[] = { { "write",
-		SND_PCM_ACCESS_RW_INTERLEAVED, write_loop }, { "write_and_poll",
-		SND_PCM_ACCESS_RW_INTERLEAVED, write_and_poll_loop }, { "async",
-		SND_PCM_ACCESS_RW_INTERLEAVED, async_loop }, { "async_direct",
-		SND_PCM_ACCESS_MMAP_INTERLEAVED, async_direct_loop }, {
-		"direct_interleaved", SND_PCM_ACCESS_MMAP_INTERLEAVED, direct_loop },
-		{ "direct_noninterleaved", SND_PCM_ACCESS_MMAP_NONINTERLEAVED,
-				direct_loop }, { "direct_write",
-				SND_PCM_ACCESS_MMAP_INTERLEAVED, direct_write_loop }, { NULL,
-				SND_PCM_ACCESS_RW_INTERLEAVED, NULL } };
+static struct transfer_method transfer_methods[] = {
+		{ "write", SND_PCM_ACCESS_RW_INTERLEAVED, write_loop },
+		{ "write_and_poll",	SND_PCM_ACCESS_RW_INTERLEAVED, write_and_poll_loop },
+		{ "async",	SND_PCM_ACCESS_RW_INTERLEAVED, async_loop },
+		{ "async_direct", SND_PCM_ACCESS_MMAP_INTERLEAVED, async_direct_loop },
+		{ "direct_interleaved", SND_PCM_ACCESS_MMAP_INTERLEAVED, direct_loop },
+		{ "direct_noninterleaved", SND_PCM_ACCESS_MMAP_NONINTERLEAVED,	direct_loop },
+		{ "direct_write", SND_PCM_ACCESS_MMAP_INTERLEAVED, direct_write_loop },
+		{ NULL,	SND_PCM_ACCESS_RW_INTERLEAVED, NULL } };
 
 static void help(void) {
 	int k;
@@ -844,6 +845,8 @@ int main(int argc, char *argv[]) {
 	signed short *samples;
 	unsigned int chn;
 	snd_pcm_channel_area_t *areas;
+
+	/*---------------------------------------------------------------------------------------*/
 
 	snd_pcm_hw_params_alloca(&hwparams);
 	snd_pcm_sw_params_alloca(&swparams);
@@ -922,6 +925,8 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
+	/*---------------------------------------------------------------------------------------*/
+
 	err = snd_output_stdio_attach(&output, stdout, 0);
 	if (err < 0) {
 		printf("Output failed: %s\n", snd_strerror(err));
@@ -971,6 +976,8 @@ int main(int argc, char *argv[]) {
 		areas[chn].step = channels * snd_pcm_format_physical_width(format);
 	}
 
+	/*---------------------------------------------------------------------------------------*/
+	midi_open();
 	randomGen_init();
 	Synth_Init();
 
