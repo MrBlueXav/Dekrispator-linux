@@ -34,6 +34,8 @@ that is the number of allpass filters
  */
 #define PH_STAGES 6
 
+extern float_t sinetable[SINETABLE_SIZE];
+
 /*---------------------------------------------------------------------*/
 
 static float 	old[PH_STAGES];

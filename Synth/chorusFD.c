@@ -43,7 +43,7 @@
  *
  ************************************************************************************************************/
 
-
+extern float_t sinetable[SINETABLE_SIZE];
 static Lfo_t			lfoL _CCM_ , lfoR _CCM_ ; // 2 independant LFOs
 static monochorus_t		delR  _CCM_ , delL  _CCM_ ; // 2 fractional delay lines
 float rateCoeff;

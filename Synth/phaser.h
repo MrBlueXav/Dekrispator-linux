@@ -30,7 +30,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include <stdint.h>
 #include "constants.h"
-#include "sinetable.h"
+#include "oscillators.h"
 
 /* Exported functions ------------------------------------------------------- */
 void PhaserInit(void);

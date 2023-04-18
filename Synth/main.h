@@ -36,7 +36,6 @@
 #include "MIDI_application.h"
 //#include "timers.h"
 #include "soundGen.h"
-#include "audio_conf.h"
 #include "delay.h"
 #include "chorusFD.h"
 #include "random.h"

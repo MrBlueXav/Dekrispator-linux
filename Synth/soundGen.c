@@ -29,7 +29,6 @@
 /*-------------------------------------------------------*/
 
 #define EPSI				.00002f
-//#define MAX_SOUNDS			14 // number - 1 of different sounds (starts at 0)
 
 /*-------------------------------------------------------*/
 
@@ -76,7 +75,51 @@ static float vol _CCM_;
 static float env _CCM_;
 static enum timbre sound _CCM_;
 
+float attenuation[MIDI_MAXi + 1];	// float volume multiplicator between 0 and 1
+
+/* Initial Volume level  */
+static int volume = VOL;
+static int old_volume = VOL;
+static bool soundOn = true;
+
+/*------------------------------------------------------------------------------*/
+
+//--------------------------------- toggle ON/OFF volume ------------------------------------------
+void toggleSound(void) {
+	if (!soundOn) {
+		volume = old_volume;
+		soundOn = true;
+	} else {
+		old_volume = volume;
+		volume = 0;
+		soundOn = false;
+	}
+}
+//------------------------------- increase output volume --------------------------------------------
+void incVol(void) {
+	if (volume < MAXVOL) {
+		volume++;
+	}
+}
+//-------------------------------- decrease output  volume ------------------------------------------
+void decVol(void) {
+	if (volume > 0) {
+		volume--;
+	}
+}
+//------------------------------------------------------------------------------------------------------
+void Volume_set(uint8_t val) {
+	volume = val;
+}
+
 /*===============================================================================================================*/
+
+void AttenuationTable_init(void) {
+	attenuation[0] = 0.0;
+	for (int i = 1; i <= MIDI_MAXi; i++) {
+		attenuation[i] = expf(LOG10 / 20.0 * ATT_MAX / MIDI_MAX * (float) (i - MIDI_MAXi));
+	}
+}
 
 void autoSound_set(int8_t val) {
 	autoSound = val;
@@ -122,7 +165,6 @@ void Sequencer_toggle(uint8_t val) { // run or stop sequencer
 		if (!sequencerIsOn)
 			ADSR_keyOff(&adsr);
 		Reset_notes_On();
-		//BSP_LED_Toggle(LED_Red);
 	}
 }
 /*---------------------------------------------------------*/
@@ -400,6 +442,8 @@ void Synth_Init(void) {
 	delayON = false;
 	phaserON = false;
 
+	AttenuationTable_init();
+	SineTable_init();
 	Delay_init();
 	drifter_init();
 	//pitchGen_init();
@@ -410,14 +454,14 @@ void Synth_Init(void) {
 	SVF_init();
 	filterFreq = 0.25f;
 	filterFreq2 = 0.25f;
-	osc_init(&op1, 0.8f, 587.f);
-	osc_init(&op2, 0.8f, 587.f);
-	osc_init(&op3, 0.8f, 587.f);
-	osc_init(&op4, 0.8f, 587.f);
-	osc_init(&vibr_lfo, 0, VIBRATO_FREQ);
-	osc_init(&filt_lfo, 0, 0);
-	osc_init(&filt2_lfo, 0, 0);
-	osc_init(&amp_lfo, 0, 0);
+	Osc_init(&op1, 0.8f, 587.f);
+	Osc_init(&op2, 0.8f, 587.f);
+	Osc_init(&op3, 0.8f, 587.f);
+	Osc_init(&op4, 0.8f, 587.f);
+	Osc_init(&vibr_lfo, 0, VIBRATO_FREQ);
+	Osc_init(&filt_lfo, 0, 0);
+	Osc_init(&filt2_lfo, 0, 0);
+	Osc_init(&amp_lfo, 0, 0);
 	AdditiveGen_newWaveform();
 	VCO_blepsaw_Init(&mbSawOsc);
 	VCO_bleprect_Init(&mbRectOsc);
@@ -488,8 +532,7 @@ void sequencer_newSequence_action(void) // User callback function called by sequ
 }
 /*===============================================================================================================*/
 
-void make_sample(float *out_L, float *out_R)
-{
+void make_sample(float *out_L, float *out_R) {
 	float y = 0;
 	float yL, yR;
 	float f1;
@@ -520,11 +563,9 @@ void make_sample(float *out_L, float *out_R)
 	/*--- Apply filter effect ---*/
 	/* Update the filters cutoff frequencies */
 	if ((!autoFilterON) && (filt_lfo.amp != 0))
-		SVF_directSetFilterValue(&SVFilter,
-				filterFreq * (1 + OpSampleCompute7bis(&filt_lfo)));
+		SVF_directSetFilterValue(&SVFilter, filterFreq * (1 + OpSampleCompute7bis(&filt_lfo)));
 	if (filt2_lfo.amp != 0)
-		SVF_directSetFilterValue(&SVFilter2,
-				filterFreq2 * (1 + OpSampleCompute7bis(&filt2_lfo)));
+		SVF_directSetFilterValue(&SVFilter2, filterFreq2 * (1 + OpSampleCompute7bis(&filt2_lfo)));
 	y = 0.5f * (SVF_calcSample(&SVFilter, y) + SVF_calcSample(&SVFilter2, y)); // Two filters in parallel
 
 	/*---  Apply delay effect ----*/
@@ -547,6 +588,9 @@ void make_sample(float *out_L, float *out_R)
 
 	yR = (yR > 1.0f) ? 1.0f : yR; //clip too loud right samples
 	yR = (yR < -1.0f) ? -1.0f : yR;
+
+	yL *= attenuation[volume];
+	yR *= attenuation[volume];
 
 	/****** let's hear the new sample *******/
 	*out_R = yR;

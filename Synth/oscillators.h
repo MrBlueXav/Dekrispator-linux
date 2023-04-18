@@ -21,7 +21,6 @@
 #include "math_tools.h"
 #include "random.h"
 #include "drifter.h"
-#include "sinetable.h"
 #include "notesTables.h"
 #include "drifter.h"
 #include "blepvco.h"
@@ -29,6 +28,11 @@
 
 enum timbre { MORPH_SAW = 0, SPLIT, ACC_SINE, WT_SINE, ADDITIVE, POWER_SINE, BLEPTRIANGLE, BLEPSQUARE,
 	NOISE, CHORD15, CHORD135, CHORD13min5, VOICES3, DRIFTERS, FM2, BLEPSAW, LAST_SOUND };
+
+
+#define SINETABLE_SIZE 	1025
+#define _2PI    		6.283185307f
+#define ALPHA			((SINETABLE_SIZE - 1)/_2PI)
 
 /*----------------------------------------------------------------------------*/
 typedef struct
@@ -76,7 +80,8 @@ float_t FM2_sampleCompute(float frq); // (op2 -> op1) + (op4 -> op3) => sound
 void 	FM_op_freq_set(Oscillator_t *op, uint8_t val);
 void 	FM_op_modInd_set(Oscillator_t *op, uint8_t val);
 /*-------------------------------------------------------*/
-void 	osc_init(Oscillator_t * op, float_t amp, float_t freq);
+void 	SineTable_init(void);
+void 	Osc_init(Oscillator_t * op, float_t amp, float_t freq);
 /*-------------------------------------------------------*/
 void 	OpSetFreq(Oscillator_t * op, float_t f);
 /*-------------------------------------------------------*/

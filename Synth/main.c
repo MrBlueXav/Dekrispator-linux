@@ -8,6 +8,9 @@
  *
  *
  ******************************************************************************
+ * type  ./dekrispator-linux -v -r48000 -m async
+ * Midi controller should be client 20.
+ * Dekrispator should be client 128.
  */
 
 /* Includes ------------------------------------------------------------------*/

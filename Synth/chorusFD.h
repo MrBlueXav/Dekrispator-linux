@@ -30,8 +30,8 @@
 
 #include <stdint.h>
 #include <math.h>
-#include "sinetable.h"
 #include "constants.h"
+#include "oscillators.h"
 
 /*--------------------------------------------------------------------------------------*/
 
