@@ -27,14 +27,9 @@
 #include <errno.h>
 #include <getopt.h>
 #include <alloca.h>
-//#include "../include/asoundlib.h"
-
-//#include <sys/time.h>
 
 /* Local includes --------------------------------------------------------------*/
-
 #include "MIDI_application.h"
-//#include "timers.h"
 #include "soundGen.h"
 #include "delay.h"
 #include "chorusFD.h"
@@ -46,7 +41,7 @@
 #include "sequencer.h"
 
 /* Exported functions --------------------------------------------------------- */
-
+void Dekrispator_exit(uint8_t val);
 /*-------------------------------------------------------*/
 #endif /* __MAIN_H */
 

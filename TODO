@@ -1,6 +1,8 @@
-TODO !
-- simplifier le démarrage 
+********  TODO ! *******************************
+//- simplifier le démarrage 
 - simplifier main.c
 //- gestion du volume depuis le controller midi
 //- bug volume blepvco
 //- calcul des tables de sinus 
+//- touche du controleur pour quitter Dekrispator
+- mémoires de patch

@@ -21,6 +21,7 @@
 #include "notesTables.h"
 #include "drifter.h"
 #include "soundGen.h"
+#include "main.h"
 
 /*------------------------------------------------------------------------------*/
 
