@@ -11,7 +11,7 @@ Tested on x86-64.
 
 When powering up the board, the synth starts in "demo mode". The synth works on its own, sounds are perpetually changing. 
 
-To control Dekrispator's parameters you have to connect first an USB MIDI controller (like Korg NanoKontrol...) to your PC and then start Dekrispator.
+To control Dekrispator's parameters you have to connect first an USB MIDI controller (like Korg NanoKontrol...) to your PC and then start Dekrispator. Verify the client number (id) of your controller with "aconnect -i" in a terminal and if it's not 20 change to the right number in file constants.h (#define MIDI_CONTROLLER_ID		...) and recompile. That should be improved later.
 
 You can also play notes if you connect a keyboard and turn off the sequencer.
 
