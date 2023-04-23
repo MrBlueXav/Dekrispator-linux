@@ -1,17 +1,27 @@
 Dekrispator (v3) for linux
 ===========
 
-This is Dekrispator synthesizer for linux/ALSA.
+This is Dekrispator synthesizer for linux/ALSA (console mode, no graphic interface).
 
-Tested on x86-64.
+Tested on x86-64 and Raspberry Pi 2.
 
 - - - -
 
 **Usage**
 
+```
+$ cd Release/
+$ make dekrispator-linux (to compile only)
+$ ./dekrispator-linux
+```
+
 When powering up the board, the synth starts in "demo mode". The synth works on its own, sounds are perpetually changing. 
 
-To control Dekrispator's parameters you have to connect first an USB MIDI controller (like Korg NanoKontrol...) to your PC and then start Dekrispator. Verify the client number (id) of your controller with "aconnect -i" in a terminal and if it's not 20 change to the right number in file constants.h (#define MIDI_CONTROLLER_ID		...) and recompile. That should be improved later.
+To control Dekrispator's parameters you have to connect first a USB MIDI controller (like Korg NanoKontrol...) to your PC and then start Dekrispator. 
+
+Verify the client number (id) of your controller, it's displayed when Dekrispator starts or you can check with "aconnect -i" in a terminal.
+
+ If it's not 20 change to the right number in file constants.h (#define MIDI_CONTROLLER_ID		...) and recompile. It's 20 for my PC but 24 for my Raspberry Pi. That should be improved later.
 
 You can also play notes if you connect a keyboard and turn off the sequencer.
 
@@ -62,7 +72,7 @@ Special thanks : Sean Bolton, Perry R. Cook and Gary P. Scavone, Gabriel Rivas, 
 
 **Building from source :**
 
-Go to Release folder and type in your terminal "make clean" then "make". 
+Go to Release folder and type in your terminal "make clean" then "make dekrispator-linux". 
 - - - 
 **See also the port to Windows, Linux, Mac and Raspberry Pi  by erwincoumans :**
 
