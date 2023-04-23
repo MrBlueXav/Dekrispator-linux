@@ -26,6 +26,29 @@ static snd_seq_t *seq_handle;
 static int in_port;
 
 /*-------------------------------------------------------------------------------*/
+static void list_clients(void) {
+
+	int count = 0;
+	int status;
+	snd_seq_client_info_t *info;
+	snd_seq_client_info_alloca(&info);
+	status = snd_seq_get_any_client_info(seq_handle, 0, info);
+
+	puts("-------------------------------------------");
+	puts("Searching for MIDI clients... ");
+
+	while (status >= 0) {
+		count += 1;
+		int id = snd_seq_client_info_get_client(info);
+		char const *name = snd_seq_client_info_get_name(info);
+		int num_ports = snd_seq_client_info_get_num_ports(info);
+		printf("Client “%s” #%i, with %i port(s)\n", name, id, num_ports);
+		status = snd_seq_query_next_client(seq_handle, info);
+	}
+	printf("Found %i clients\n", count);
+}
+
+/*-------------------------------------------------------------------------------*/
 void capture_midiController(snd_seq_t *seq) {
 	snd_seq_addr_t sender, dest;
 	snd_seq_port_subscribe_t *subs;
@@ -50,6 +73,7 @@ void midi_open(void) {
 	CHK(
 			in_port = snd_seq_create_simple_port(seq_handle, "listen:in", SND_SEQ_PORT_CAP_WRITE|SND_SEQ_PORT_CAP_SUBS_WRITE, SND_SEQ_PORT_TYPE_APPLICATION),
 			"Could not open port");
+	list_clients();
 	capture_midiController(seq_handle);
 	puts("MIDI OK");
 }
